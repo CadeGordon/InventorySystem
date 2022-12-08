@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "InventorySystemCharacter.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
+#include "Item.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -57,6 +57,8 @@ void AInventorySystemCharacter::SetupPlayerInputComponent(class UInputComponent*
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AInventorySystemCharacter::Interact);
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &AInventorySystemCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AInventorySystemCharacter::MoveRight);
 
@@ -67,35 +69,23 @@ void AInventorySystemCharacter::SetupPlayerInputComponent(class UInputComponent*
 	PlayerInputComponent->BindAxis("TurnRate", this, &AInventorySystemCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AInventorySystemCharacter::LookUpAtRate);
-
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AInventorySystemCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AInventorySystemCharacter::TouchStopped);
-
-	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AInventorySystemCharacter::OnResetVR);
 }
 
-
-void AInventorySystemCharacter::OnResetVR()
+void AInventorySystemCharacter::Interact()
 {
-	// If InventorySystem is added to a project via 'Add Feature' in the Unreal Editor the dependency on HeadMountedDisplay in InventorySystem.Build.cs is not automatically propagated
-	// and a linker error will result.
-	// You will need to either:
-	//		Add "HeadMountedDisplay" to [YourProject].Build.cs PublicDependencyModuleNames in order to build successfully (appropriate if supporting VR).
-	// or:
-	//		Comment or delete the call to ResetOrientationAndPosition below (appropriate if not supporting VR)
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
+	FVector Start = FollowCamera->GetComponentLocation();
+	FVector End = Start + FollowCamera->GetForwardVector() * 500.0f;
 
-void AInventorySystemCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		Jump();
-}
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
 
-void AInventorySystemCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		StopJumping();
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility)) {
+
+		if (IInteractableInterface* Interface = Cast<IInteractableInterface>(HitResult.GetActor())) {
+			Interface->Interact();
+		}
+	}
 }
 
 void AInventorySystemCharacter::TurnAtRate(float Rate)
@@ -109,6 +99,8 @@ void AInventorySystemCharacter::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
+
+
 
 void AInventorySystemCharacter::MoveForward(float Value)
 {
