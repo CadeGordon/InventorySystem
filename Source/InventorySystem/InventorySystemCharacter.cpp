@@ -83,7 +83,7 @@ void AInventorySystemCharacter::Interact()
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility)) {
 
 		if (IInteractableInterface* Interface = Cast<IInteractableInterface>(HitResult.GetActor())) {
-			Interface->Interact();
+			Interface->Interact(this);
 		}
 	}
 }

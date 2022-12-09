@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Structs.h"
 #include "GameFramework/Character.h"
 #include "InventorySystemCharacter.generated.h"
 
@@ -30,6 +31,8 @@ public:
 	float BaseLookUpRate;
 
 protected:
+
+	
 
 	void Interact();
 
@@ -61,5 +64,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Items")
+	void AddItemToInventoryWidget(FItemData ItemData);
 };
 

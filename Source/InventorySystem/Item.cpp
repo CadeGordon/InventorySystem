@@ -2,6 +2,7 @@
 
 
 #include "Item.h"
+#include "InventorySystemCharacter.h"
 #include "Components/StaticMeshComponent.h"
 
 // Sets default values
@@ -23,8 +24,12 @@ void AItem::BeginPlay()
 	
 }
 
-void AItem::Interact()
+void AItem::Interact(class AInventorySystemCharacter* Character)
 {
+	if (Character) {
+		Character->AddItemToInventoryWidget(ItemData);
+	}
+
 	Destroy();
 }
 

@@ -29,6 +29,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	virtual void Interact() override;
+	virtual void Interact(class AInventorySystemCharacter* Character) override;
+
+	FItemData GetItemData() const { return ItemData; }
 
 };
