@@ -39,7 +39,7 @@ public:
 	/// <param name="Character"></param>
 	virtual void Interact(class AInventorySystemCharacter* Character) override;
 	/// <summary>
-	/// Gets all the data of the item
+	/// Gets all the data of the item from the struct
 	/// </summary>
 	/// <returns></returns>
 	FItemData GetItemData() const { return ItemData; }
