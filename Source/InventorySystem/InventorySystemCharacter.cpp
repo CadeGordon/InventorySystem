@@ -57,6 +57,7 @@ void AInventorySystemCharacter::SetupPlayerInputComponent(class UInputComponent*
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
+	//When the player press the interact button  "E" it calls the interact function
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AInventorySystemCharacter::Interact);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AInventorySystemCharacter::MoveForward);
@@ -73,15 +74,20 @@ void AInventorySystemCharacter::SetupPlayerInputComponent(class UInputComponent*
 
 void AInventorySystemCharacter::Interact()
 {
+	//gets the location of the camera following the player
 	FVector Start = FollowCamera->GetComponentLocation();
+	// sets up the end location of the cast for the ray cast
 	FVector End = Start + FollowCamera->GetForwardVector() * 500.0f;
 
+	//checks the hit result
 	FHitResult HitResult;
+	//checks the collision for object
 	FCollisionQueryParams Params;
+	//set the params to ignore the player
 	Params.AddIgnoredActor(this);
-
+	// sets a line trace to check hit result, the start and end location on the line trace
 	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility)) {
-
+		//checks if the object was interacted with
 		if (IInteractableInterface* Interface = Cast<IInteractableInterface>(HitResult.GetActor())) {
 			Interface->Interact(this);
 		}

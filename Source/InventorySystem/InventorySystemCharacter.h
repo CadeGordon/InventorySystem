@@ -33,7 +33,9 @@ public:
 protected:
 
 	
-
+	/// <summary>
+	/// function to set up the interact with an object funtionality
+	/// </summary>
 	void Interact();
 
 	/** Called for forwards/backward input */

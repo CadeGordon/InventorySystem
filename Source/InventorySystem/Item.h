@@ -18,10 +18,14 @@ public:
 	AItem();
 
 protected:
-
+	/// <summary>
+	/// lets the dev choose the mesh for the item they want to use
+	/// </summary>
 	UPROPERTY(EditDefaultsOnly, Category = "Item")
 	class UStaticMeshComponent* ItemMesh;
-
+	/// <summary>
+	/// Gets the data for an item from the structs class
+	/// </summary>
 	UPROPERTY(EditDefaultsOnly, Category = "Item")
 	FItemData ItemData;
 
@@ -29,8 +33,15 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	/// <summary>
+	/// Lets the player interact with an item
+	/// </summary>
+	/// <param name="Character"></param>
 	virtual void Interact(class AInventorySystemCharacter* Character) override;
-
+	/// <summary>
+	/// Gets all the data of the item
+	/// </summary>
+	/// <returns></returns>
 	FItemData GetItemData() const { return ItemData; }
 
 };
