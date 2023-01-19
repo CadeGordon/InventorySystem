@@ -13,4 +13,5 @@ struct FItemData
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		//gives the dev the option to give the item an image
 		class UTexture2D* ItemImage;
+
 };
