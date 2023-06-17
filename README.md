@@ -1,3 +1,3 @@
 # InventorySystem
 
-Complex game system created for AIE simple modular Inventory
+A complex game system created in 8 weeks for Academy of Interactive Entertainment (AIE) a simple modular inventory system
